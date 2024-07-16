@@ -5,7 +5,8 @@ from entity import Entity
 from game_map import GameMap
 from input_handlers import EventHandler
 
-def main()-> None:
+
+def main() -> None:
     screen_width = 80
     screen_height = 50
 
@@ -18,15 +19,17 @@ def main()-> None:
 
     event_handler = EventHandler()
 
-    player = Entity(int(screen_width/2), int(screen_height/2), "@", (255,255,255))
-    npc = Entity(int(screen_width/2-5), int(screen_height/2),"@", (255, 255, 0))
+    player = Entity(int(screen_width/2), int(screen_height/2),
+                    "@", (255, 255, 255))
+    npc = Entity(int(screen_width/2-5),
+                 int(screen_height/2), "@", (255, 255, 0))
     entities = {npc, player}
 
     game_map = GameMap(map_width, map_height)
 
     engine = Engine(
-        entities=entities, 
-        event_handler=event_handler, 
+        entities=entities,
+        event_handler=event_handler,
         game_map=game_map,
         player=player)
 
@@ -37,8 +40,9 @@ def main()-> None:
         title="Cruising The Baths",
         vsync=True,
     ) as context:
-        root_console = tcod.console.Console(screen_width, screen_height, order="F")
-        
+        root_console = tcod.console.Console(
+            screen_width, screen_height, order="F")
+
         while True:
             engine.render(console=root_console, context=context)
 
@@ -50,4 +54,3 @@ def main()-> None:
 if __name__ == "__main__":
 
     main()
-    

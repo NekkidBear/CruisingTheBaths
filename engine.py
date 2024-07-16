@@ -10,7 +10,12 @@ from input_handlers import EventHandler
 
 
 class Engine:
-    def __init__(self, entities: Set[Entity], event_handler: EventHandler, game_map: GameMap, player: Entity ):
+    def __init__(
+            self, entities: Set[Entity],
+            event_handler: EventHandler,
+            game_map: GameMap,
+            player: Entity
+            ):
         self.entities = entities
         self.event_handler = event_handler
         self.game_map = game_map
@@ -24,8 +29,8 @@ class Engine:
                 continue
 
             action.perform(self, self.player)
-        
-    def render(self, console: Console, context: Context)->None:
+
+    def render(self, console: Console, context: Context) -> None:
         self.game_map.render(console)
 
         for entity in self.entities:
