@@ -123,7 +123,10 @@ class BumpAction(ActionWithDirection):
 
 class ItemAction(Action):
     def __init__(
-        self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None
+        self,
+        entity: Actor,
+        item: Item,
+        target_xy: Optional[Tuple[int, int]] = None
     ):
         super().__init__(entity)
         self.item = item
@@ -137,5 +140,6 @@ class ItemAction(Action):
         return self.engine.game_map.get_actor_at_location(*self.target_xy)
 
     def perform(self) -> None:
-        """Invoke the items ability, this action will be given to provide context."""
+        """Invoke the items ability, this action will
+        be given to provide context."""
         self.item.consumable.activate(self)
