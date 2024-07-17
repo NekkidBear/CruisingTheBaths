@@ -10,8 +10,8 @@ from components.base_component import BaseComponent
 from exceptions import Impossible
 from input_handlers import (
     ActionOrHandler,
-    AreaRangedAttackHandler, 
-    SingleRangedAttackHandler
+    AreaRangedAttackHandler,
+    SingleRangedAttackHandler,
 )
 
 if TYPE_CHECKING:
@@ -52,7 +52,6 @@ class ConfusionConsumable(Consumable):
             self.engine,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
         )
-        return None
 
     def activate(self, action: actions.ItemAction) -> None:
         consumer = action.entity
@@ -66,33 +65,13 @@ class ConfusionConsumable(Consumable):
             raise Impossible("You cannot confuse yourself!")
 
         self.engine.message_log.add_message(
-            f"The eyes of the {
-                target.name} look vacant, as it starts to stumble around!",
+            f"The eyes of the {target.name} look vacant, as it starts to stumble around!",
             color.status_effect_applied,
         )
         target.ai = components.ai.ConfusedEnemy(
             entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,
         )
         self.consume()
-
-
-class HealingConsumable(Consumable):
-    def __init__(self, amount: int):
-        self.amount = amount
-
-    def activate(self, action: actions.ItemAction) -> None:
-        consumer = action.entity
-        amount_recovered = consumer.fighter.heal(self.amount)
-
-        if amount_recovered > 0:
-            self.engine.message_log.add_message(
-                f"You consume the {self.parent.name}, and recover {
-                    amount_recovered} HP!",
-                color.health_recovered,
-            )
-            self.consume()
-        else:
-            raise Impossible("Your health is already full.")
 
 
 class FireballDamageConsumable(Consumable):
@@ -109,7 +88,6 @@ class FireballDamageConsumable(Consumable):
             radius=self.radius,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
         )
-        return None
 
     def activate(self, action: actions.ItemAction) -> None:
         target_xy = action.target_xy
@@ -131,6 +109,24 @@ class FireballDamageConsumable(Consumable):
         self.consume()
 
 
+class HealingConsumable(Consumable):
+    def __init__(self, amount: int):
+        self.amount = amount
+
+    def activate(self, action: actions.ItemAction) -> None:
+        consumer = action.entity
+        amount_recovered = consumer.fighter.heal(self.amount)
+
+        if amount_recovered > 0:
+            self.engine.message_log.add_message(
+                f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",
+                color.health_recovered,
+            )
+            self.consume()
+        else:
+            raise Impossible(f"Your health is already full.")
+
+
 class LightningDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
         self.damage = damage
@@ -142,9 +138,7 @@ class LightningDamageConsumable(Consumable):
         closest_distance = self.maximum_range + 1.0
 
         for actor in self.engine.game_map.actors:
-            if actor is not consumer and self.parent.gamemap.visible[
-                actor.x, actor.y
-            ]:
+            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
                 distance = consumer.distance(actor.x, actor.y)
 
                 if distance < closest_distance:
@@ -153,8 +147,7 @@ class LightningDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"A lighting bolt strikes the {
-                    target.name} with a loud thunder, for {self.damage} damage!"
+                f"A lighting bolt strikes the {target.name} with a loud thunder, for {self.damage} damage!"
             )
             target.fighter.take_damage(self.damage)
             self.consume()

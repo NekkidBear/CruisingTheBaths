@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import copy
 import lzma
-import pickleimport traceback
+import pickle
+import traceback
 from typing import Optional
 
 import tcod
@@ -11,8 +12,8 @@ import tcod
 import color
 from engine import Engine
 import entity_factories
+from game_map import GameWorld
 import input_handlers
-from procgen import generate_dungeon
 
 
 # Load the background image and remove the alpha channel.
@@ -35,7 +36,8 @@ def new_game() -> Engine:
 
     engine = Engine(player=player)
 
-    engine.game_map = generate_dungeon(
+    engine.game_world = GameWorld(
+        engine=engine,
         max_rooms=max_rooms,
         room_min_size=room_min_size,
         room_max_size=room_max_size,
@@ -43,13 +45,13 @@ def new_game() -> Engine:
         map_height=map_height,
         max_monsters_per_room=max_monsters_per_room,
         max_items_per_room=max_items_per_room,
-        engine=engine,
     )
+
+    engine.game_world.generate_floor()
     engine.update_fov()
 
     engine.message_log.add_message(
-        "Hello and welcome, adventurer, to yet another dungeon!",
-        color.welcome_text
+        "Hello and welcome, adventurer, to yet another dungeon!", color.welcome_text
     )
     return engine
 
@@ -72,14 +74,14 @@ class MainMenu(input_handlers.BaseEventHandler):
         console.print(
             console.width // 2,
             console.height // 2 - 4,
-            "CRUISING THE BATHS",
+            "TOMBS OF THE ANCIENT KINGS",
             fg=color.menu_title,
             alignment=tcod.CENTER,
         )
         console.print(
             console.width // 2,
             console.height - 2,
-            "By Jason King-Lowe",
+            "By (Your name here)",
             fg=color.menu_title,
             alignment=tcod.CENTER,
         )
@@ -104,7 +106,7 @@ class MainMenu(input_handlers.BaseEventHandler):
         if event.sym in (tcod.event.K_q, tcod.event.K_ESCAPE):
             raise SystemExit()
         elif event.sym == tcod.event.K_c:
-          try:
+            try:
                 return input_handlers.MainGameEventHandler(load_game("savegame.sav"))
             except FileNotFoundError:
                 return input_handlers.PopupMessage(self, "No saved game to load.")

@@ -1,11 +1,12 @@
+#!/usr/bin/env python3
 import traceback
 
 import tcod
 
 import color
 import exceptions
-import input_handlers
 import setup_game
+import input_handlers
 
 
 def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
@@ -29,12 +30,10 @@ def main() -> None:
         screen_width,
         screen_height,
         tileset=tileset,
-        title="Cruising The Baths",
+        title="Yet Another Roguelike Tutorial",
         vsync=True,
     ) as context:
-        root_console = tcod.console.Console(
-            screen_width, screen_height, order="F")
-
+        root_console = tcod.Console(screen_width, screen_height, order="F")
         try:
             while True:
                 root_console.clear()
@@ -63,5 +62,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
     main()

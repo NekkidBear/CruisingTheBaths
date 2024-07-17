@@ -25,12 +25,12 @@ class MessageLog:
         self.messages: List[Message] = []
 
     def add_message(
-        self, text: str,
-        fg: Tuple[int, int, int] = color.white,
-        *, stack: bool = True,
+        self, text: str, fg: Tuple[int, int, int] = color.white, *, stack: bool = True,
     ) -> None:
         """Add a message to this log.
+
         `text` is the message text, `fg` is the text color.
+
         If `stack` is True then the message can stack with a previous message
         of the same text.
         """
@@ -40,10 +40,10 @@ class MessageLog:
             self.messages.append(Message(text, fg))
 
     def render(
-        self, console: tcod.console.Console,
-        x: int, y: int, width: int, height: int,
+        self, console: tcod.Console, x: int, y: int, width: int, height: int,
     ) -> None:
         """Render this log over the given area.
+
         `x`, `y`, `width`, `height` is the rectangular region to render onto
         the `console`.
         """
@@ -51,8 +51,8 @@ class MessageLog:
 
     @staticmethod
     def wrap(string: str, width: int) -> Iterable[str]:
-        """Return a wrapped text message"""
-        for line in string.splitlines():  # handle newlines in messages.
+        """Return a wrapped text message."""
+        for line in string.splitlines():  # Handle newlines in messages.
             yield from textwrap.wrap(
                 line, width, expand_tabs=True,
             )
@@ -60,7 +60,7 @@ class MessageLog:
     @classmethod
     def render_messages(
         cls,
-        console: tcod.console.Console,
+        console: tcod.Console,
         x: int,
         y: int,
         width: int,

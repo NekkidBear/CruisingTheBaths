@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from components.consumable import Consumable
     from components.fighter import Fighter
     from components.inventory import Inventory
+    from components.level import Level
     from game_map import GameMap
 
 T = TypeVar("T", bound="Entity")
@@ -20,18 +21,20 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
+
     parent: Union[GameMap, Inventory]
 
-    def __init__(self,
-                 parent: Optional[GameMap] = None,
-                 x: int = 0,
-                 y: int = 0,
-                 char: str = "?",
-                 color: Tuple[int, int, int] = (255, 255, 255),
-                 name: str = "<Unnamed>",
-                 blocks_movement: bool = False,
-                 render_order: RenderOrder = RenderOrder.CORPSE,
-                 ):
+    def __init__(
+        self,
+        parent: Optional[GameMap] = None,
+        x: int = 0,
+        y: int = 0,
+        char: str = "?",
+        color: Tuple[int, int, int] = (255, 255, 255),
+        name: str = "<Unnamed>",
+        blocks_movement: bool = False,
+        render_order: RenderOrder = RenderOrder.CORPSE,
+    ):
         self.x = x
         self.y = y
         self.char = char
@@ -40,7 +43,7 @@ class Entity:
         self.blocks_movement = blocks_movement
         self.render_order = render_order
         if parent:
-            # if parent isn't provided now then it will be set later.
+            # If parent isn't provided now then it will be set later.
             self.parent = parent
             parent.entities.add(self)
 
@@ -58,8 +61,7 @@ class Entity:
         return clone
 
     def place(self, x: int, y: int, gamemap: Optional[GameMap] = None) -> None:
-        """Place this entity at a new location.
-            handles moving across GameMaps."""
+        """Place this entitiy at a new location.  Handles moving across GameMaps."""
         self.x = x
         self.y = y
         if gamemap:
@@ -71,10 +73,9 @@ class Entity:
 
     def distance(self, x: int, y: int) -> float:
         """
-        Return the distance between the current entity 
-        and the given (x, y) coordinate.
+        Return the distance between the current entity and the given (x, y) coordinate.
         """
-        return math.sqrt((x-self.x) ** 2 + (y - self.y) ** 2)
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
     def move(self, dx: int, dy: int) -> None:
         # Move the entity by a given amount
@@ -84,16 +85,17 @@ class Entity:
 
 class Actor(Entity):
     def __init__(
-            self,
-            *,
-            x: int = 0,
-            y: int = 0,
-            char: str = "?",
-            color: Tuple[int, int, int] = (255, 255, 255),
-            name: str = "<Unnamed>",
-            ai_cls: Type[BaseAI],
-            fighter: Fighter,
-            inventory: Inventory,
+        self,
+        *,
+        x: int = 0,
+        y: int = 0,
+        char: str = "?",
+        color: Tuple[int, int, int] = (255, 255, 255),
+        name: str = "<Unnamed>",
+        ai_cls: Type[BaseAI],
+        fighter: Fighter,
+        inventory: Inventory,
+        level: Level,
     ):
         super().__init__(
             x=x,
@@ -113,6 +115,9 @@ class Actor(Entity):
         self.inventory = inventory
         self.inventory.parent = self
 
+        self.level = level
+        self.level.parent = self
+
     @property
     def is_alive(self) -> bool:
         """Returns True as long as this actor can perform actions."""
@@ -120,15 +125,16 @@ class Actor(Entity):
 
 
 class Item(Entity):
-    def __init__(self,
-                 *,
-                 x: int = 0,
-                 y: int = 0,
-                 char: str = "?",
-                 color: Tuple[int, int, int] = (255, 255, 255),
-                 name: str = "<Unnamed>",
-                 consumable: Consumable
-                 ):
+    def __init__(
+        self,
+        *,
+        x: int = 0,
+        y: int = 0,
+        char: str = "?",
+        color: Tuple[int, int, int] = (255, 255, 255),
+        name: str = "<Unnamed>",
+        consumable: Consumable,
+    ):
         super().__init__(
             x=x,
             y=y,

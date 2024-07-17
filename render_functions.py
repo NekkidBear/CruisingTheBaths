@@ -1,11 +1,19 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
 from typing import TYPE_CHECKING
+=======
+from typing import Tuple, TYPE_CHECKING
+>>>>>>> compare/2020/part-11
 
 import color
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from tcod import console
+=======
+    from tcod import Console
+>>>>>>> compare/2020/part-11
     from engine import Engine
     from game_map import GameMap
 
@@ -13,14 +21,23 @@ if TYPE_CHECKING:
 def get_names_at_location(x: int, y: int, game_map: GameMap) -> str:
     if not game_map.in_bounds(x, y) or not game_map.visible[x, y]:
         return ""
+<<<<<<< HEAD
     names = ", ".join(
         entity.name for entity in game_map.entities
         if entity.x == x and entity.y == y
     )
+=======
+
+    names = ", ".join(
+        entity.name for entity in game_map.entities if entity.x == x and entity.y == y
+    )
+
+>>>>>>> compare/2020/part-11
     return names.capitalize()
 
 
 def render_bar(
+<<<<<<< HEAD
         console: console.Console, current_value: int,
         maximum_value: int, total_width: int
 ) -> None:
@@ -29,6 +46,13 @@ def render_bar(
     console.draw_rect(
         x=0, y=45, width=total_width, height=1, ch=1, bg=color.bar_empty
     )
+=======
+    console: Console, current_value: int, maximum_value: int, total_width: int
+) -> None:
+    bar_width = int(float(current_value) / maximum_value * total_width)
+
+    console.draw_rect(x=0, y=45, width=20, height=1, ch=1, bg=color.bar_empty)
+>>>>>>> compare/2020/part-11
 
     if bar_width > 0:
         console.draw_rect(
@@ -36,6 +60,7 @@ def render_bar(
         )
 
     console.print(
+<<<<<<< HEAD
         x=1, y=45,
         string=f"HP: {current_value}/{maximum_value}", fg=color.bar_text
     )
@@ -43,6 +68,25 @@ def render_bar(
 
 def render_names_at_mouse_location(
         console: console.Console, x: int, y: int, engine: Engine
+=======
+        x=1, y=45, string=f"HP: {current_value}/{maximum_value}", fg=color.bar_text
+    )
+
+
+def render_dungeon_level(
+    console: Console, dungeon_level: int, location: Tuple[int, int]
+) -> None:
+    """
+    Render the level the player is currently on, at the given location.
+    """
+    x, y = location
+
+    console.print(x=x, y=y, string=f"Dungeon level: {dungeon_level}")
+
+
+def render_names_at_mouse_location(
+    console: Console, x: int, y: int, engine: Engine
+>>>>>>> compare/2020/part-11
 ) -> None:
     mouse_x, mouse_y = engine.mouse_location
 
