@@ -48,7 +48,8 @@ class ActionWithDirection(Action):
     @property
     def blocking_entity(self) -> Optional[Entity]:
         """Return the blocking entity at this action's destination."""
-        return self.engine.game_map.get_blocking_entity_at_location(*self.dest_xy)
+        return self.engine.game_map.get_blocking_entity_at_location(
+            *self.dest_xy)
 
     def perform(self) -> None:
         raise NotImplementedError()
@@ -57,10 +58,10 @@ class ActionWithDirection(Action):
 class MeleeAction(ActionWithDirection):
     def perform(self, ) -> None:
         target = self.blocking_entity
-            if not target:
-                return  # no entity to attack
+        if not target:
+            return  # No entity to attack
 
-            print(f"you kick the {target.name}, much to it's annoyance!")
+        print(f"you kick the {target.name}, much to it's annoyance!")
 
 
 class MovementAction(ActionWithDirection):

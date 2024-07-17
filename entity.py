@@ -30,7 +30,7 @@ class Entity:
         self.color = color
         self.name = name
         self.blocks_movement = blocks_movement
-        if gamemap: 
+        if gamemap:
             # if gamemap isn't provided now then it will be set later.
             self.gamemap = gamemap
             gamemap.entities.add(self)
@@ -43,14 +43,13 @@ class Entity:
         clone.gamemap = gamemap
         gamemap.entities.add(clone)
         return clone
-    
-    def place(self, x: int, y:int, gamemap: Optional[GameMap] = None) -> None:
+
+    def place(self, x: int, y: int, gamemap: Optional[GameMap] = None) -> None:
         """Place this entity at a new location. handles moving across GameMaps."""
         self.x = x
         self.y = y
-        if gamemap: 
+        if gamemap:
             if hasattr(self, "gamemap"):  # Possibly uninitialized.
                 self.gamemap.entities.remove(self)
             self.gamemap = gamemap
             gamemap.entities.add(self)
-        
